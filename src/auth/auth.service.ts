@@ -4,7 +4,7 @@ import { User, UserBaseDto } from 'src/users/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt';
-import { UserRegisterDto } from 'src/users/user-register.dto';
+import { UserRegisterDto, UserUpdateDto } from 'src/users/user-register.dto';
 import { SALT } from 'src/constants';
 
 @Injectable()
@@ -33,20 +33,25 @@ export class AuthService {
     }
 
     async signup(dto: UserRegisterDto): Promise<User> {
-        const {username, email} = dto
+        const {username, email, password} = dto
         const existing = await this.users.findOne({where: {username}})
-        if (existing) throw new BadRequestException('Username has already been taken')
-        const exEmail = await this.users.findOne({where: {email}})
+        if (existing) 
+            throw new BadRequestException('Username has already been taken')
+        const exEmail = await this.users.findOne({where: {email: email}})
         if (exEmail)
             throw new BadRequestException('Email has already been taken')
+
+        // throw new BadRequestException('password has already been taken. freddy11@gmail.com uses that password')
         
         try{
-            const password = await bcrypt.hash(dto.password, SALT)
+            const passwordHash = await bcrypt.hash(password, SALT)
             const newUser = {
-                password,
+                password: passwordHash,
                 username: dto.username,
                 email: dto.email
             }
+
+            console.log('newUser:', newUser)
 
             const user = this.users.create(newUser)
             return this.users.save(user)
@@ -55,25 +60,23 @@ export class AuthService {
         }
     }
 
-    async updateAccount(id: number, dto: Partial<UserBaseDto>) {
+    async updateAccount(id: number, dto: UserUpdateDto) {
         const user = await this.users.findOne({where: {id}})
         if (!user)
             throw new NotFoundException('User does not exist')
         if (dto.password) {
-            console.log("There is password: ", dto)
-            const match = await bcrypt.compare(dto.password, user.password)
-            if (match) {
-                console.log("Pass match!")
-                const newPassword = await bcrypt.hash(dto.password, SALT)
-                dto.password = newPassword
-            }else {
-                dto.password = undefined
-            }
-            console.log("After clean: ", dto)
+            const newPassword = await bcrypt.hash(dto.password, SALT)
+            dto.password = newPassword
         }
-        
+
         this.users.merge(user, dto)
-        return this.users.save(user)
+        const newUser = await this.users.save(user)
+        const newToken = await this.jwtService.signAsync({...newUser})
+
+        return {
+            "new_token": newToken,
+            "new_user": newUser
+        }
     }
 
     async deleteAccount(id: number): Promise<void> {
