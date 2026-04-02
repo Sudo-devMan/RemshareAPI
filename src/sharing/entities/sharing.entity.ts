@@ -18,6 +18,9 @@ export class Sharing {
     @Column()
     password: string
 
-    @OneToMany(() => ShareFile, (file) => file.sharing, { cascade: true })
-    files: ShareFile[]
+    @Column('simple-array')
+    files: string[]
+
+    // @OneToMany(() => ShareFile, (file) => file.sharing, { cascade: true })
+    // files: ShareFile[]
 }

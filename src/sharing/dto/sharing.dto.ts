@@ -15,4 +15,6 @@ export class ShareFileDto {
     @IsString()
     @IsEmail()
     senderEmail: string
+
+    
 }

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Sharing } from './entities/sharing.entity';
 import { Repository } from 'typeorm';
@@ -11,14 +11,15 @@ import { SALT } from 'src/constants';
 export class SharingService {
     constructor(@InjectRepository(Sharing) private sharing: Repository<Sharing>) {}
 
-    async shareFile(sharefile: Partial<ShareFileDto>, files: any) {
+    async shareFile(sharefile: Partial<ShareFileDto>, files: string[]) {
         const {password} = sharefile
         if (!password) {
             throw new BadRequestException('sharing files requires password for security')
         }
         const hash = await bcrypt.hash(password, SALT)
+
+        sharefile.password = hash
         const newShareFile = {
-            password: password,
             files: files,
             ...sharefile
         }
@@ -32,6 +33,11 @@ export class SharingService {
         if (!received) {
             throw new NotFoundException('The file(s) meant for that email were not found')
         }
-        const match = await bcrypt.compare(password, received?.password)
+        const match = await bcrypt.compare(password, received.password)
+        if (!match) {
+            throw new UnauthorizedException('Incorrect file passsword')
+        }
+
+        return received
     }
 }
