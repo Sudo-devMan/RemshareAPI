@@ -7,4 +7,7 @@ export class ReceiveDto {
 
     @IsString()
     password: string
+
+    @IsString()
+    uniqueId: string
 }

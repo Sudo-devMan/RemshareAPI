@@ -30,7 +30,7 @@ export class AuthController {
     @HttpCode(HttpStatus.CREATED)
     @Public()
     signup(@Body(new ValidationPipe()) dto: UserRegisterDto) {
-        console.log('dto: ', dto)
+        // console.log('dto: ', dto)
         return this.authService.signup(dto)
     }
 

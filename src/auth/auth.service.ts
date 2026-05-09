@@ -51,11 +51,11 @@ export class AuthService {
                 email: dto.email
             }
 
-            console.log('newUser:', newUser)
+            // console.log('newUser:', newUser)
 
             const user = this.users.create(newUser)
             return this.users.save(user)
-        } catch (err) {
+        } catch (err: any) {
             throw new Error(err)
         }
     }

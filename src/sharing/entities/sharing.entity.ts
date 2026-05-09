@@ -21,6 +21,9 @@ export class Sharing {
     @Column('simple-array')
     files: string[]
 
+    @Column()
+    uniqueId: string
+
     // @OneToMany(() => ShareFile, (file) => file.sharing, { cascade: true })
     // files: ShareFile[]
 }

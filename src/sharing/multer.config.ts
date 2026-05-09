@@ -6,7 +6,7 @@ export const multerConfig = {
     storage: diskStorage({
         destination: './uploads',
         filename: (req, file, callback) => {
-            const unique = Date.now().toString() + '-' + Math.floor(Math.random() * 1e9)
+            const unique = Date.now().toString() + '-' + file.originalname.split('.')[0]
             callback(null, unique + extname(file.originalname))
         }
     })
