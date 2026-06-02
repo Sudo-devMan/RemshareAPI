@@ -11,6 +11,10 @@ async function bootstrap() {
     transform: true
   }))
   app.use('/uploads', express.static('uploads'))
+  app.enableCors({
+    origin: ['http://localhost:5173', 'https://remshare-eight.vercel.app'],
+    credentials: true
+  })
   await app.listen(process.env.PORT ?? 5757);
 }
 bootstrap();
