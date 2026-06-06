@@ -2,9 +2,10 @@
   "name": "rem-share",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "Hednrick Devman",
   "private": true,
   "license": "UNLICENSED",
+  "preinstall": "npx only-allow pnpm",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
