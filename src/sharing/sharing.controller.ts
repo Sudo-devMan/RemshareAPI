@@ -16,10 +16,7 @@ export class SharingController {
     @UseInterceptors(FilesInterceptor('files', 1000, process.env.NODE_ENV === 'production' ? {storage: storage} : multerConfig))
     @Public()
     async share(@Body() data: ShareFileDto, @UploadedFiles() files: Express.Multer.File[]) {
-        // console.log('files: ', files)
-        // console.log('data: ', data)
         const paths = files.map(file => {return file.path})
-        // console.log("file paths: ", paths)
         return this.shareService.shareFile(data, paths)
     }
 

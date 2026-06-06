@@ -14,12 +14,12 @@ export default cloudinary
 export const storage = new CloudinaryStorage({
     cloudinary,
     params: async (req, file) => {
-					const ogName = path.parse(file.originalname).name;
-					const cleanName = ogName.replace(/\s+/g, "-") + Date.now();
+        const ogName = path.parse(file.originalname).name;
+        const cleanName = ogName.replace(/\s+/g, "-") + Date.now();
         return {
             folder: 'share',
             resource_type: 'auto',
-							 public_id: cleanName
+            public_id: cleanName
         }
     }
 })
