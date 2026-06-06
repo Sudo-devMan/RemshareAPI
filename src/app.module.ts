@@ -7,12 +7,20 @@ import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [AuthModule, UsersModule, SharingModule, TypeOrmModule.forRoot({
-    type: 'sqlite',
-    database: 'db.sqlite',
-    autoLoadEntities: true,
-    synchronize: true,
-    entities: [__dirname + '/**/*.entity{.ts, .js}']
+  imports: [AuthModule, UsersModule, SharingModule, TypeOrmModule.forRootAsync({
+    useFactory: () => ({
+      type: 'postgres',
+      url: process.env.DB_URL,
+      autoLoadEntities: true,
+      synchronize: false,
+      // entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      ssl: {
+        rejectUnauthorized: false
+      },
+      extra: {
+        connectionTimeoutMillis: 10000
+      }
+    })
   })],
   controllers: [AppController],
   providers: [AppService],
