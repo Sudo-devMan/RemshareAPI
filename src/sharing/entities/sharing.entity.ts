@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { ShareFile } from "./sharefile.entity";
 
 @Entity()
@@ -23,6 +23,9 @@ export class Sharing {
 
     @Column()
     uniqueId: string
+
+    @CreateDateColumn()
+    createdAt: Date;
 
     // @OneToMany(() => ShareFile, (file) => file.sharing, { cascade: true })
     // files: ShareFile[]

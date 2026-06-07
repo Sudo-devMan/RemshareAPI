@@ -5,9 +5,10 @@ import { AuthModule } from './auth/auth.module';
 import { SharingModule } from './sharing/sharing.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
-  imports: [AuthModule, UsersModule, SharingModule, TypeOrmModule.forRootAsync({
+  imports: [AuthModule, UsersModule, SharingModule, ScheduleModule.forRoot(), TypeOrmModule.forRootAsync({
     useFactory: () => ({
       type: 'postgres',
       url: process.env.DB_URL,
@@ -18,7 +19,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         rejectUnauthorized: false
       },
       extra: {
-        connectionTimeoutMillis: 10000
+        keepalives: true,
+        keepalives_idle: 60,
+        max: 10,
+        connectionTimeoutMillis: 10000,
+        idleTimeoutMillis: 5000
       }
     })
   })],
