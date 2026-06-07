@@ -1,47 +1,40 @@
-# syntax = docker/dockerfile:1
+# --- STAGE 1: Build ---
+FROM node:20-alpine AS builder
 
-# Adjust NODE_VERSION as desired
-ARG NODE_VERSION=22.21.1
-FROM node:${NODE_VERSION}-slim AS base
+# Install pnpm globally inside the container
+RUN npm install -g pnpm
 
-LABEL fly_launch_runtime="NestJS"
-
-# NestJS app lives here
 WORKDIR /app
 
-# Set production environment
-ENV NODE_ENV="production"
+# Copy package management files
+COPY package.json pnpm-lock.yaml* ./
 
+# Install all dependencies (including devDependencies)
+RUN pnpm install --frozen-lockfile
 
-# Throw-away build stage to reduce size of final image
-FROM base AS build
-
-# Install packages needed to build node modules
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential node-gyp pkg-config python-is-python3
-
-# Install node modules
-COPY package-lock.json package.json ./
-RUN npm ci --include=dev
-
-# Copy application code
+# Copy the entire codebase
 COPY . .
 
-# Build application
-RUN npm run build
+# Build the NestJS application (generates /dist)
+RUN pnpm run build
 
+# Remove development dependencies to keep the image light
+RUN pnpm prune --prod
 
-# Final stage for app image
-FROM base
+# --- STAGE 2: Execution ---
+FROM node:20-alpine AS runner
 
-# Copy built application
-COPY --from=build /app /app
+WORKDIR /app
 
-# Setup sqlite3 on a separate volume
-RUN mkdir -p /data
-VOLUME /data
+ENV NODE_ENV=production
+ENV PORT=3000
 
-# Start the server by default, this can be overwritten at runtime
+# Copy the bare minimum required to run the compiled NestJS code
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+
 EXPOSE 3000
-ENV DATABASE_URL="file:///data/sqlite.db"
-CMD [ "npm", "run", "start" ]
+
+# Start the NestJS API
+CMD ["node", "dist/main"]
