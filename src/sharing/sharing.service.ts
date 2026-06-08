@@ -52,7 +52,7 @@ export class SharingService {
         return received
     }
 
-    generateUniqueId(len = 5) {
+    generateUniqueId(len = 4) {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890';
         let uniqueId = '';
 
