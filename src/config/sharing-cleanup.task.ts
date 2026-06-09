@@ -38,10 +38,14 @@ export class SharingCleanupTask {
                 if (share.files && Array.isArray(share.files)) {
                     share.files.forEach((url) => {
                         const s3Key = url.split('.com/')[1]
-                        s3KeysToDelete.push({Key: s3Key})
+                        if (s3Key) {
+                          s3KeysToDelete.push({ Key: s3Key })
+                        }
                     })
                 }
             })
+
+            console.log("Here are the keys: ", s3KeysToDelete);
 
             if (s3KeysToDelete.length > 0) {
                 const deleteCommand = new DeleteObjectsCommand({
