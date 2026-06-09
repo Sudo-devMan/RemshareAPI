@@ -13,7 +13,7 @@ export class SharingService {
 
     async shareFile(sharefile: Partial<ShareFileDto>, files: string[]) {
         const {password, receiverEmail} = sharefile
-        const uid = this.generateUniqueId(5);
+        const uid = this.generateUniqueId(4);
 
         console.log("Uid: ", uid)
         if (!password) {
