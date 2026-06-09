@@ -53,7 +53,7 @@ export class SharingService {
     }
 
     generateUniqueId(len = 4) {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890';
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
         let uniqueId = '';
 
         for (let m = 0; m < len; m++) {
