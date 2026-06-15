@@ -9,6 +9,12 @@ export class ShareFile {
     @Column({nullable: true})
     url: string
 
+    @Column()
+    name: string
+
+    @Column()
+    type: string
+
     // @ManyToOne(() => Sharing, (sharing) => sharing.files)
     // sharing: Sharing
 }
