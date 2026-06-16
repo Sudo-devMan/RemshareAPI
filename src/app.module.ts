@@ -22,8 +22,8 @@ import { ScheduleModule } from '@nestjs/schedule';
         keepalives: true,
         keepalives_idle: 60,
         max: 10,
-        connectionTimeoutMillis: 10000,
-        idleTimeoutMillis: 5000
+        connectionTimeoutMillis: 20000,
+        idleTimeoutMillis: 7000
       }
     })
   })],
