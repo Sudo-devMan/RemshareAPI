@@ -4,35 +4,35 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn()
-    id: number
+    @PrimaryGeneratedColumn({ type: 'int' })
+    id!: number;
 
-    @Column({ unique: true })
-    username: string
+    @Column({ type: 'varchar', unique: true })
+    username!: string;
 
-    @Column()
-    password: string
+    @Column({ type: 'varchar' })
+    password!: string;
 
-    @Column({unique: true})
-    email: string
+    @Column({ type: 'varchar', unique: true })
+    email!: string;
 
-    @Column({ default: true })
-    isActive: boolean
+    @Column({ type: 'boolean', default: true })
+    isActive!: boolean;
 
-    @Column({ nullable: true })
-    profilePictureUrl: string
+    // Set nullable: true in TypeORM and use string | null in TS
+    @Column({ type: 'varchar', nullable: true })
+    profilePictureUrl!: string | null;
 }
-
 export class UserBaseDto {
     @IsString()
-    username: string
+    username!: string
 
     @IsString()
-    email: string
+    email!: string
 
     @IsString()
-    profilePictureUrl: string
+    profilePictureUrl!: string
 
     @IsString()
-    password: string
+    password!: string
 }

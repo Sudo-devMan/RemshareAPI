@@ -5,10 +5,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ShareFile } from './entities/sharefile.entity';
 import { Sharing } from './entities/sharing.entity';
 import { SharingCleanupTask } from 'src/config/sharing-cleanup.task';
+import { NotificationsService } from 'src/notifications/notifications.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ShareFile, Sharing])],
-  providers: [SharingService, SharingCleanupTask],
+  providers: [SharingService, SharingCleanupTask, NotificationsService],
   controllers: [SharingController],
   exports: [TypeOrmModule]
 })

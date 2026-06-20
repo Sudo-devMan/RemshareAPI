@@ -1,32 +1,34 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { ShareFile } from "./sharefile.entity";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Sharing {
-    @PrimaryGeneratedColumn()
-    id: number
+    @PrimaryGeneratedColumn({ type: 'int' })
+    id!: number;
 
-    @Column({nullable: true})
-    note: string
+    @Column({ type: 'text', nullable: true })
+    note!: string | null;
 
-    @Column()
-    receiverEmail: string
+    @Column({ type: 'varchar' })
+    receiverEmail!: string;
 
-    @Column({nullable: true, default: 'anonymous@no-email.remshare'})
-    senderEmail: string
+    @Column({ type: 'varchar', nullable: true, default: 'anonymous@no-email.remshare' })
+    senderEmail!: string | null;
 
-    @Column()
-    password: string
+    @Column({ type: 'varchar' })
+    password!: string;
 
-    @Column('simple-array')
-    files: string[]
+    @Column({ type: 'simple-array' })
+    files!: string[];
 
-    @Column()
-    uniqueId: string
+    @Column({ type: 'varchar' })
+    uniqueId!: string;
 
-    @CreateDateColumn()
-    createdAt: Date;
+    @Column({ type: 'varchar', nullable: true, default: 'NO LINK' })
+    receiveUrl!: string;
+
+    @CreateDateColumn({ type: 'timestamp' })
+    createdAt!: Date;
 
     // @OneToMany(() => ShareFile, (file) => file.sharing, { cascade: true })
-    // files: ShareFile[]
+    // files!: ShareFile[];
 }

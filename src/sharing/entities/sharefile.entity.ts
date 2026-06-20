@@ -3,18 +3,18 @@ import { Sharing } from "./sharing.entity";
 
 @Entity()
 export class ShareFile {
-    @PrimaryGeneratedColumn()
-    id: number
+    @PrimaryGeneratedColumn({ type: 'int' })
+    id!: number;
 
-    @Column({nullable: true})
-    url: string
+    @Column({ type: 'varchar', nullable: true })
+    url!: string | null;
 
-    @Column()
-    name: string
+    @Column({ type: 'varchar' })
+    name!: string;
 
-    @Column()
-    type: string
+    @Column({ type: 'varchar' })
+    type!: string;
 
-    // @ManyToOne(() => Sharing, (sharing) => sharing.files)
-    // sharing: Sharing
+    // @ManyToOne(() => Sharing, (sharing) => sharing.files, { onDelete: 'CASCADE' })
+    // sharing!: Sharing;
 }
